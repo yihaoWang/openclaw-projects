@@ -59,7 +59,7 @@ class ReminderSystem:
         if user_id_str not in self.user_prefs["users"]:
             self.user_prefs["users"][user_id_str] = {
                 "subscribed": True,
-                "supermarkets": [],
+                "favorites": [],
                 "minutes_before": minutes_before,
                 "active": True
             }
@@ -68,11 +68,103 @@ class ReminderSystem:
         user_pref["active"] = True
         user_pref["minutes_before"] = minutes_before
         
-        if supermarket and supermarket not in user_pref["supermarkets"]:
-            user_pref["supermarkets"].append(supermarket)
+        # Maintain backwards compatibility
+        if "supermarkets" in user_pref and "favorites" not in user_pref:
+            user_pref["favorites"] = user_pref.pop("supermarkets")
+        elif "favorites" not in user_pref:
+            user_pref["favorites"] = []
+        
+        if supermarket and supermarket not in user_pref["favorites"]:
+            user_pref["favorites"].append(supermarket)
         
         self.save_preferences()
         return True
+    
+    def add_favorite(self, user_id: int, store_name: str) -> tuple[bool, str]:
+        """
+        Add a favorite store for the user
+        
+        Returns:
+            (success, message)
+        """
+        user_id_str = str(user_id)
+        
+        # Find matching store
+        matching_stores = []
+        for market in self.discount_data['supermarkets']:
+            if (store_name.lower() in market['name'].lower() or 
+                store_name.lower() in market['name_en'].lower()):
+                matching_stores.append(market['name_en'])
+        
+        if not matching_stores:
+            return False, f"❌ No store found matching '{store_name}'"
+        
+        if len(matching_stores) > 1:
+            stores_list = "\n  • ".join(matching_stores)
+            return False, f"🤔 Multiple stores found:\n  • {stores_list}\n\nPlease be more specific!"
+        
+        store = matching_stores[0]
+        
+        # Initialize user if needed
+        if user_id_str not in self.user_prefs["users"]:
+            self.user_prefs["users"][user_id_str] = {
+                "subscribed": False,
+                "favorites": [],
+                "minutes_before": 30,
+                "active": False
+            }
+        
+        user_pref = self.user_prefs["users"][user_id_str]
+        if "favorites" not in user_pref:
+            user_pref["favorites"] = []
+        
+        if store in user_pref["favorites"]:
+            return False, f"ℹ️ **{store}** is already in your favorites"
+        
+        user_pref["favorites"].append(store)
+        self.save_preferences()
+        
+        return True, f"✅ Added **{store}** to favorites!"
+    
+    def remove_favorite(self, user_id: int, store_name: str) -> tuple[bool, str]:
+        """
+        Remove a favorite store
+        
+        Returns:
+            (success, message)
+        """
+        user_id_str = str(user_id)
+        
+        if user_id_str not in self.user_prefs["users"]:
+            return False, "❌ You don't have any favorites yet"
+        
+        user_pref = self.user_prefs["users"][user_id_str]
+        favorites = user_pref.get("favorites", [])
+        
+        # Find matching favorite
+        matching = [f for f in favorites if store_name.lower() in f.lower()]
+        
+        if not matching:
+            return False, f"❌ '{store_name}' not in your favorites"
+        
+        if len(matching) > 1:
+            stores_list = "\n  • ".join(matching)
+            return False, f"🤔 Multiple matches:\n  • {stores_list}\n\nPlease be more specific!"
+        
+        store = matching[0]
+        user_pref["favorites"].remove(store)
+        self.save_preferences()
+        
+        return True, f"✅ Removed **{store}** from favorites"
+    
+    def get_favorites(self, user_id: int) -> List[str]:
+        """Get user's favorite stores"""
+        user_id_str = str(user_id)
+        
+        if user_id_str not in self.user_prefs["users"]:
+            return []
+        
+        return self.user_prefs["users"][user_id_str].get("favorites", [])
     
     def unsubscribe_user(self, user_id: int) -> bool:
         """Unsubscribe user from all reminders"""
@@ -102,22 +194,20 @@ class ReminderSystem:
             target_time = (now + timedelta(minutes=minutes_before)).time()
             
             # Find matching discounts
-            upcoming = self.find_upcoming_discounts(
-                target_time, 
-                prefs.get("supermarkets", [])
-            )
+            favorites = prefs.get("favorites", prefs.get("supermarkets", []))
+            upcoming = self.find_upcoming_discounts(target_time, favorites)
             
             if upcoming:
                 await self.send_reminder(int(user_id), upcoming, minutes_before)
     
     def find_upcoming_discounts(self, target_time: time, 
-                                supermarkets: List[str]) -> List[Dict]:
+                                favorites: List[str]) -> List[Dict]:
         """Find discounts starting at target time"""
         matching = []
         
         for market in self.discount_data['supermarkets']:
-            # Filter by user's preferred supermarkets if any
-            if supermarkets and market['name_en'] not in supermarkets:
+            # Filter by user's favorite stores if any
+            if favorites and market['name_en'] not in favorites:
                 continue
             
             for schedule in market['discount_schedule']:
@@ -249,17 +339,107 @@ async def cmd_remind_status(update, context):
         message += "Use `/remind` to enable notifications"
     else:
         minutes = prefs.get('minutes_before', 30)
-        supermarkets = prefs.get('supermarkets', [])
+        favorites = prefs.get('favorites', prefs.get('supermarkets', []))
         
         message = f"🔔 **Reminders: ON**\n\n"
         message += f"⏰ Notify **{minutes} minutes** before discounts\n"
         
-        if supermarkets:
-            message += f"\n🏪 **Watching:**\n"
-            message += "  • " + "\n  • ".join(supermarkets)
+        if favorites:
+            message += f"\n⭐ **Favorite Stores:**\n"
+            message += "  • " + "\n  • ".join(favorites)
         else:
             message += "\n🌍 Watching **all supermarkets**"
+            message += "\n\n💡 Use `/favorite add <store>` to add favorites"
         
         message += "\n\n💡 Use `/remind_off` to disable"
     
     await update.message.reply_text(message, parse_mode='Markdown')
+
+async def cmd_favorite(update, context):
+    """Manage favorite stores"""
+    reminder_system = context.bot_data.get('reminder_system')
+    if not reminder_system:
+        await update.message.reply_text("❌ Reminder system not available")
+        return
+    
+    user_id = update.effective_user.id
+    
+    if not context.args:
+        # Show help
+        favorites = reminder_system.get_favorites(user_id)
+        
+        message = "⭐ **Favorite Stores**\n\n"
+        
+        if favorites:
+            message += "**Your Favorites:**\n"
+            message += "  • " + "\n  • ".join(favorites) + "\n\n"
+        else:
+            message += "_You haven't added any favorites yet._\n\n"
+        
+        message += "**Commands:**\n"
+        message += "• `/favorite add <store>` - Add a favorite\n"
+        message += "• `/favorite remove <store>` - Remove a favorite\n"
+        message += "• `/favorite list` - Show this help\n\n"
+        message += "**Examples:**\n"
+        message += "• `/favorite add Life`\n"
+        message += "• `/favorite add AEON`\n"
+        message += "• `/favorite remove Life`\n\n"
+        message += "💡 When you have favorites, reminders only notify you about those stores!"
+        
+        await update.message.reply_text(message, parse_mode='Markdown')
+        return
+    
+    action = context.args[0].lower()
+    
+    if action == "list":
+        # Show favorites
+        favorites = reminder_system.get_favorites(user_id)
+        
+        if not favorites:
+            message = "⭐ **No favorites yet!**\n\n"
+            message += "Add with: `/favorite add <store name>`"
+        else:
+            message = "⭐ **Your Favorite Stores:**\n\n"
+            message += "  • " + "\n  • ".join(favorites) + "\n\n"
+            message += f"Total: {len(favorites)} stores"
+        
+        await update.message.reply_text(message, parse_mode='Markdown')
+    
+    elif action == "add":
+        if len(context.args) < 2:
+            await update.message.reply_text(
+                "❌ Please specify a store name\n\n"
+                "Example: `/favorite add Life`",
+                parse_mode='Markdown'
+            )
+            return
+        
+        store_name = ' '.join(context.args[1:])
+        success, msg = reminder_system.add_favorite(user_id, store_name)
+        
+        if success:
+            msg += "\n\n💡 Enable reminders with `/remind` to get notified!"
+        
+        await update.message.reply_text(msg, parse_mode='Markdown')
+    
+    elif action == "remove":
+        if len(context.args) < 2:
+            await update.message.reply_text(
+                "❌ Please specify a store name\n\n"
+                "Example: `/favorite remove Life`",
+                parse_mode='Markdown'
+            )
+            return
+        
+        store_name = ' '.join(context.args[1:])
+        success, msg = reminder_system.remove_favorite(user_id, store_name)
+        
+        await update.message.reply_text(msg, parse_mode='Markdown')
+    
+    else:
+        await update.message.reply_text(
+            "❌ Unknown action. Use:\n"
+            "• `/favorite add <store>`\n"
+            "• `/favorite remove <store>`\n"
+            "• `/favorite list`"
+        )

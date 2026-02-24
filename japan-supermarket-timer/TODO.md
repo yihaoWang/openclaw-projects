@@ -27,9 +27,17 @@
 - [x] /remind_off to disable
 - [x] /remind_status to check settings
 
+### Iteration 3 (Favorite Stores)
+- [x] /favorite add command
+- [x] /favorite remove command
+- [x] /favorite list command
+- [x] Filter reminders by favorites
+- [x] Fuzzy store name matching
+- [x] Backwards compatibility with old data
+
 ## 🚧 In Progress
 
-- [ ] Test reminder system with real users
+- [ ] Test reminder + favorites system with real users
 - [ ] Fix any async issues in reminder loop
 - [ ] Add more specific store locations (Tokyo area priority)
 

@@ -83,6 +83,9 @@ docker-compose logs -f
 | `/remind [minutes]` | Enable discount notifications (default: 30 min before) |
 | `/remind_off` | Disable notifications |
 | `/remind_status` | Check your notification settings |
+| `/favorite add <store>` | Add a store to your favorites ⭐ |
+| `/favorite remove <store>` | Remove from favorites |
+| `/favorite list` | Show your favorite stores |
 | `/tips` | Money-saving tips |
 | `/stats` | Database statistics |
 
@@ -113,6 +116,29 @@ The bot will automatically send you a message like:
 - `/remind 45` - Notify 45 minutes before
 - `/remind_off` - Stop all notifications
 - `/remind_status` - Check your settings
+
+**Favorite Stores:**
+
+Only get notified about stores you care about!
+
+```
+You: /favorite add Life
+Bot: ✅ Added Life to favorites!
+     💡 Enable reminders with /remind to get notified!
+
+You: /favorite add AEON
+Bot: ✅ Added AEON to favorites!
+```
+
+Now `/remind` will only notify you about Life and AEON discounts.
+
+```
+You: /favorite list
+Bot: ⭐ Your Favorite Stores:
+     • Life
+     • AEON
+     Total: 2 stores
+```
 
 ## 📱 Example Usage
 
@@ -199,19 +225,22 @@ Discount times are compiled from:
 - ✅ Search by store name (`/search`)
 - ✅ Regional filtering (`/nearby`)
 - ✅ **Smart notifications** - Get alerted before discounts! 🔔
+- ✅ **Favorite stores** - Only get notified about stores you care about ⭐
+- ✅ Customizable reminder timing (5-120 minutes before)
 - ✅ Comprehensive database with chains, addresses, notes
 - ✅ Docker deployment ready
 - ✅ Full test coverage
 
 ## 🌟 Features Coming Soon
 
-- [ ] User-specific favorite stores
 - [ ] Location-based store finder (GPS)
+- [ ] More specific Tokyo/Kansai store locations
+- [ ] Weekend vs weekday schedule support
 - [ ] Price tracking and trends
 - [ ] Community store updates
 - [ ] Full multi-language support (EN/JA)
 - [ ] LINE bot integration
-- [ ] Web interface
+- [ ] Web interface with map view
 
 ## 🤝 Contributing
 

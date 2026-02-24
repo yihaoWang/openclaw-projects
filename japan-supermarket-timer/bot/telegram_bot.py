@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import List, Dict, Any
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
-from reminders import ReminderSystem, cmd_remind, cmd_remind_off, cmd_remind_status
+from reminders import ReminderSystem, cmd_remind, cmd_remind_off, cmd_remind_status, cmd_favorite
 
 # Load discount data
 DATA_FILE = Path(__file__).parent.parent / "data" / "discount_times.json"
@@ -54,6 +54,7 @@ Never miss a discount again! I track when Japanese supermarkets mark down fresh 
 • `/search <name>` - Find specific supermarket
 • `/nearby` - Find stores by region
 • `/remind` - Enable discount notifications 🔔
+• `/favorite` - Manage your favorite stores ⭐
 • `/tips` - Money-saving tips
 • `/stats` - Database statistics
 
@@ -368,6 +369,9 @@ def main():
     app.add_handler(CommandHandler("remind_off", cmd_remind_off))
     app.add_handler(CommandHandler("remind_status", cmd_remind_status))
     
+    # Favorite stores
+    app.add_handler(CommandHandler("favorite", cmd_favorite))
+    
     # Add callback query handler for buttons
     app.add_handler(CallbackQueryHandler(button_callback))
     
@@ -376,6 +380,7 @@ def main():
     print(f"✅ Bot starting with {len(DATA['supermarkets'])} supermarkets...")
     print(f"📱 Commands: /start /list /now /soon /search /nearby /tips /stats")
     print(f"🔔 Reminder commands: /remind /remind_off /remind_status")
+    print(f"⭐ Favorite commands: /favorite add/remove/list")
     print(f"⏰ Tracking discounts for major Japanese supermarket chains")
     print("=" * 50)
     
