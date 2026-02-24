@@ -80,8 +80,39 @@ docker-compose logs -f
 | `/list` | View all supermarket schedules |
 | `/search <name>` | Search for specific supermarket |
 | `/nearby` | Find stores by region |
+| `/remind [minutes]` | Enable discount notifications (default: 30 min before) |
+| `/remind_off` | Disable notifications |
+| `/remind_status` | Check your notification settings |
 | `/tips` | Money-saving tips |
 | `/stats` | Database statistics |
+
+## 🔔 Notifications
+
+Get notified before discounts start!
+
+```
+You: /remind 30
+Bot: ✅ Reminders Enabled!
+     🔔 You'll be notified 30 minutes before discounts start
+```
+
+The bot will automatically send you a message like:
+```
+🔔 Discount Alert!
+⏰ Discounts starting in 30 minutes:
+
+🏪 Life (ライフ)
+💰 30% off at 18:30
+📦 Prepared Foods
+
+🏃 Head to the store now to get the best selection!
+```
+
+**Customization:**
+- `/remind 15` - Notify 15 minutes before
+- `/remind 45` - Notify 45 minutes before
+- `/remind_off` - Stop all notifications
+- `/remind_status` - Check your settings
 
 ## 📱 Example Usage
 
@@ -160,15 +191,27 @@ Discount times are compiled from:
 
 **Note:** Times may vary by location. Always check your local store for exact schedules.
 
+## ✅ Current Features
+
+- ✅ Track 12+ major supermarket chains
+- ✅ Real-time discount status (`/now`)
+- ✅ Upcoming discounts (`/soon`)
+- ✅ Search by store name (`/search`)
+- ✅ Regional filtering (`/nearby`)
+- ✅ **Smart notifications** - Get alerted before discounts! 🔔
+- ✅ Comprehensive database with chains, addresses, notes
+- ✅ Docker deployment ready
+- ✅ Full test coverage
+
 ## 🌟 Features Coming Soon
 
-- [ ] Push notifications 30 minutes before discounts
 - [ ] User-specific favorite stores
 - [ ] Location-based store finder (GPS)
 - [ ] Price tracking and trends
 - [ ] Community store updates
-- [ ] Multi-language support (EN/JA)
+- [ ] Full multi-language support (EN/JA)
 - [ ] LINE bot integration
+- [ ] Web interface
 
 ## 🤝 Contributing
 

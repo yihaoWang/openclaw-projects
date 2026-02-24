@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import List, Dict, Any
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+from reminders import ReminderSystem, cmd_remind, cmd_remind_off, cmd_remind_status
 
 # Load discount data
 DATA_FILE = Path(__file__).parent.parent / "data" / "discount_times.json"
@@ -52,6 +53,7 @@ Never miss a discount again! I track when Japanese supermarkets mark down fresh 
 • `/soon` - Upcoming discounts (next 2 hours)
 • `/search <name>` - Find specific supermarket
 • `/nearby` - Find stores by region
+• `/remind` - Enable discount notifications 🔔
 • `/tips` - Money-saving tips
 • `/stats` - Database statistics
 
@@ -347,6 +349,10 @@ def main():
     # Create application
     app = Application.builder().token(token).build()
     
+    # Initialize reminder system
+    reminder_system = ReminderSystem(app.bot)
+    app.bot_data['reminder_system'] = reminder_system
+    
     # Add command handlers
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("list", list_supermarkets))
@@ -357,6 +363,11 @@ def main():
     app.add_handler(CommandHandler("tips", tips))
     app.add_handler(CommandHandler("stats", stats))
     
+    # Reminder commands
+    app.add_handler(CommandHandler("remind", cmd_remind))
+    app.add_handler(CommandHandler("remind_off", cmd_remind_off))
+    app.add_handler(CommandHandler("remind_status", cmd_remind_status))
+    
     # Add callback query handler for buttons
     app.add_handler(CallbackQueryHandler(button_callback))
     
@@ -364,8 +375,13 @@ def main():
     print("=" * 50)
     print(f"✅ Bot starting with {len(DATA['supermarkets'])} supermarkets...")
     print(f"📱 Commands: /start /list /now /soon /search /nearby /tips /stats")
+    print(f"🔔 Reminder commands: /remind /remind_off /remind_status")
     print(f"⏰ Tracking discounts for major Japanese supermarket chains")
     print("=" * 50)
+    
+    # Start reminder system in background
+    import asyncio
+    asyncio.create_task(reminder_system.run_reminder_loop())
     
     # Start polling
     app.run_polling(allowed_updates=Update.ALL_TYPES)
