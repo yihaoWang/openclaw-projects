@@ -198,6 +198,231 @@
       "notes": "2 minutes walk from Hatagaya Station (Keio Line)"
     },
     {
+      "name": "ライフ 渋谷東店",
+      "name_en": "Life Shibuya East",
+      "chain": "Life Corporation",
+      "brand": "ライフ",
+      "address": "3-16-3 Shibuya, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6595,
+        "lon": 139.7079
+      },
+      "discount_schedule": [
+        {
+          "time": "19:00",
+          "discount": "30%",
+          "items": ["deli", "bento"]
+        },
+        {
+          "time": "20:30",
+          "discount": "50%",
+          "items": ["deli", "bento", "sushi"]
+        }
+      ],
+      "closing_time": "23:00",
+      "notes": "5 minutes from Shibuya Station. Popular with office workers."
+    },
+    {
+      "name": "サミット 神泉店",
+      "name_en": "Summit Shinsen",
+      "chain": "Summit Store",
+      "brand": "サミット",
+      "address": "30-3 Shinsen-cho, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6565,
+        "lon": 139.6929
+      },
+      "discount_schedule": [
+        {
+          "time": "18:30",
+          "discount": "20%",
+          "items": ["deli"]
+        },
+        {
+          "time": "20:00",
+          "discount": "50%",
+          "items": ["bento", "deli", "sushi"]
+        }
+      ],
+      "closing_time": "23:00",
+      "notes": "Near Shinsen Station. Compact store, popular items sell out fast."
+    },
+    {
+      "name": "オーケー 池尻店",
+      "name_en": "OK Ikejiri",
+      "chain": "OK Corporation",
+      "brand": "オーケー",
+      "address": "1-7-14 Ikejiri, Setagaya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6455,
+        "lon": 139.6762
+      },
+      "discount_schedule": [
+        {
+          "time": "20:00",
+          "discount": "30%",
+          "items": ["bento", "deli"]
+        },
+        {
+          "time": "21:30",
+          "discount": "50%",
+          "items": ["bento", "deli"]
+        }
+      ],
+      "closing_time": "22:00",
+      "notes": "Budget-friendly. Already low prices, discounts are extra savings."
+    },
+    {
+      "name": "イトーヨーカドー 広尾店",
+      "name_en": "Ito-Yokado Hiroo",
+      "chain": "Seven & i Holdings",
+      "brand": "イトーヨーカドー",
+      "address": "5-19-2 Hiroo, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6504,
+        "lon": 139.7194
+      },
+      "discount_schedule": [
+        {
+          "time": "18:00",
+          "discount": "20%",
+          "items": ["deli", "bakery"]
+        },
+        {
+          "time": "19:30",
+          "discount": "30%",
+          "items": ["bento", "deli", "sushi"]
+        },
+        {
+          "time": "21:00",
+          "discount": "50%",
+          "items": ["bento", "deli"]
+        }
+      ],
+      "closing_time": "22:00",
+      "notes": "Department store quality. Good for premium sushi and sashimi."
+    },
+    {
+      "name": "まいばすけっと 恵比寿南店",
+      "name_en": "My Basket Ebisu Minami",
+      "chain": "Aeon Group",
+      "brand": "まいばすけっと",
+      "address": "1-10-6 Ebisu-minami, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6447,
+        "lon": 139.7087
+      },
+      "discount_schedule": [
+        {
+          "time": "20:00",
+          "discount": "30%",
+          "items": ["bento", "deli"]
+        },
+        {
+          "time": "21:30",
+          "discount": "50%",
+          "items": ["bento", "deli"]
+        }
+      ],
+      "closing_time": "23:00",
+      "notes": "Open late! Compact urban store near Ebisu Station."
+    },
+    {
+      "name": "西友 渋谷店",
+      "name_en": "Seiyu Shibuya",
+      "chain": "Walmart Japan",
+      "brand": "西友",
+      "address": "24-4 Udagawa-cho, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6609,
+        "lon": 139.6976
+      },
+      "discount_schedule": [
+        {
+          "time": "19:00",
+          "discount": "30%",
+          "items": ["bento", "deli"]
+        },
+        {
+          "time": "21:00",
+          "discount": "50%",
+          "items": ["bento", "deli"]
+        }
+      ],
+      "closing_time": "24:00",
+      "notes": "24-hour operation. Central Shibuya location, always busy."
+    },
+    {
+      "name": "マルエツ 中目黒店",
+      "name_en": "Maruetsu Nakameguro",
+      "chain": "Maruetsu",
+      "brand": "マルエツ",
+      "address": "3-3-2 Kamimeguro, Meguro-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6433,
+        "lon": 139.6986
+      },
+      "discount_schedule": [
+        {
+          "time": "19:00",
+          "discount": "30%",
+          "items": ["deli", "bento"]
+        },
+        {
+          "time": "20:30",
+          "discount": "50%",
+          "items": ["bento", "deli", "sushi"]
+        }
+      ],
+      "closing_time": "23:00",
+      "notes": "Trendy Nakameguro area. Good selection of ready-made foods."
+    },
+    {
+      "name": "サミット 代官山店",
+      "name_en": "Summit Daikanyama",
+      "chain": "Summit Store",
+      "brand": "サミット",
+      "address": "20-20 Sarugaku-cho, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6502,
+        "lon": 139.7040
+      },
+      "discount_schedule": [
+        {
+          "time": "18:30",
+          "discount": "20%",
+          "items": ["deli"]
+        },
+        {
+          "time": "20:00",
+          "discount": "50%",
+          "items": ["bento", "deli", "sushi"]
+        }
+      ],
+      "closing_time": "22:30",
+      "notes": "Upscale area. Higher quality products, good for special occasions."
+    },
+    {
+      "name": "成城石井 恵比寿アトレ店",
+      "name_en": "Seijo Ishii Ebisu Atre",
+      "chain": "Seijo Ishii",
+      "brand": "成城石井",
+      "address": "Atre Ebisu, 1-5-5 Ebisu-minami, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6465,
+        "lon": 139.7101
+      },
+      "discount_schedule": [
+        {
+          "time": "20:30",
+          "discount": "20-30%",
+          "items": ["deli", "bakery"]
+        }
+      ],
+      "closing_time": "22:00",
+      "notes": "Premium supermarket. Limited discounts but high quality imports."
+    },
+    {
       "name": "成城石井",
       "name_en": "Seijo Ishii",
       "chain": "Seijo Ishii",

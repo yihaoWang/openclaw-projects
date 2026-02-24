@@ -35,11 +35,20 @@
 - [x] Fuzzy store name matching
 - [x] Backwards compatibility with old data
 
+### Iteration 4 (Tokyo Store Expansion)
+- [x] Added 10 specific Tokyo locations
+- [x] Shibuya area coverage (5 stores)
+- [x] Ebisu/Nakameguro coverage (3 stores)
+- [x] Daikanyama/Hiroo coverage (2 stores)
+- [x] All stores with coordinates for future GPS feature
+- [x] Detailed notes about each location
+- [x] Total: 22 supermarkets (12 chains + 10 specific)
+
 ## 🚧 In Progress
 
 - [ ] Test reminder + favorites system with real users
 - [ ] Fix any async issues in reminder loop
-- [ ] Add more specific store locations (Tokyo area priority)
+- [ ] GPS-based nearest store finder (data ready!)
 
 ## 📋 Next Iteration (Phase 3)
 
