@@ -1,0 +1,103 @@
+{
+  "supermarkets": [
+    {
+      "name": "業務スーパー",
+      "name_en": "Gyomu Super",
+      "discount_schedule": [
+        {
+          "time": "19:00",
+          "discount": "30%",
+          "items": ["生鮮", "弁当", "惣菜"]
+        },
+        {
+          "time": "20:00",
+          "discount": "50%",
+          "items": ["生鮮", "弁当", "惣菜"]
+        }
+      ],
+      "notes": "Most locations follow this schedule"
+    },
+    {
+      "name": "イオン",
+      "name_en": "AEON",
+      "discount_schedule": [
+        {
+          "time": "19:30",
+          "discount": "30%",
+          "items": ["弁当", "惣菜"]
+        },
+        {
+          "time": "20:30",
+          "discount": "50%",
+          "items": ["弁当", "惣菜", "寿司"]
+        }
+      ],
+      "notes": "Varies by location"
+    },
+    {
+      "name": "西友",
+      "name_en": "Seiyu",
+      "discount_schedule": [
+        {
+          "time": "19:00",
+          "discount": "20-30%",
+          "items": ["弁当", "惣菜"]
+        },
+        {
+          "time": "21:00",
+          "discount": "半額",
+          "items": ["弁当", "惣菜"]
+        }
+      ],
+      "notes": "24-hour locations may have different schedules"
+    },
+    {
+      "name": "ライフ",
+      "name_en": "Life",
+      "discount_schedule": [
+        {
+          "time": "18:30",
+          "discount": "30%",
+          "items": ["惣菜"]
+        },
+        {
+          "time": "20:00",
+          "discount": "50%",
+          "items": ["弁当", "惣菜"]
+        }
+      ],
+      "notes": "General schedule - specific stores may vary"
+    },
+    {
+      "name": "ライフ 幡ヶ谷店",
+      "name_en": "Life Hatagaya",
+      "brand": "ライフ",
+      "address": "東京都渋谷区幡ヶ谷2-47-12",
+      "discount_schedule": [
+        {
+          "time": "18:30",
+          "discount": "30%",
+          "items": ["惣菜", "弁当"]
+        },
+        {
+          "time": "20:00",
+          "discount": "50%",
+          "items": ["惣菜", "弁当", "寿司"]
+        },
+        {
+          "time": "21:00",
+          "discount": "半額",
+          "items": ["弁当", "惣菜", "パン"]
+        }
+      ],
+      "closing_time": "22:00",
+      "notes": "幡ヶ谷駅から徒歩2分"
+    }
+  ],
+  "general_tips": [
+    "打折時間可能因店舗而異",
+    "週末可能提早開始打折",
+    "閉店前 1 小時通常是最大折扣",
+    "人氣商品可能很快賣完"
+  ]
+}
