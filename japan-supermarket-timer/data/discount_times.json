@@ -3,101 +3,268 @@
     {
       "name": "業務スーパー",
       "name_en": "Gyomu Super",
+      "chain": "Kobe Bussan",
       "discount_schedule": [
         {
           "time": "19:00",
           "discount": "30%",
-          "items": ["生鮮", "弁当", "惣菜"]
+          "items": ["fresh_food", "bento", "deli"]
         },
         {
           "time": "20:00",
           "discount": "50%",
-          "items": ["生鮮", "弁当", "惣菜"]
+          "items": ["fresh_food", "bento", "deli"]
         }
       ],
-      "notes": "Most locations follow this schedule"
+      "notes": "Most locations follow this schedule. Known for bulk imports and low prices."
     },
     {
       "name": "イオン",
       "name_en": "AEON",
+      "chain": "Aeon Group",
       "discount_schedule": [
         {
           "time": "19:30",
           "discount": "30%",
-          "items": ["弁当", "惣菜"]
+          "items": ["bento", "deli"]
         },
         {
           "time": "20:30",
           "discount": "50%",
-          "items": ["弁当", "惣菜", "寿司"]
+          "items": ["bento", "deli", "sushi"]
         }
       ],
-      "notes": "Varies by location"
+      "notes": "Varies by location. Larger stores may have earlier discounts."
     },
     {
       "name": "西友",
       "name_en": "Seiyu",
+      "chain": "Walmart Japan",
       "discount_schedule": [
         {
           "time": "19:00",
           "discount": "20-30%",
-          "items": ["弁当", "惣菜"]
+          "items": ["bento", "deli"]
         },
         {
           "time": "21:00",
-          "discount": "半額",
-          "items": ["弁当", "惣菜"]
+          "discount": "50%",
+          "items": ["bento", "deli"]
         }
       ],
-      "notes": "24-hour locations may have different schedules"
+      "notes": "24-hour locations may have different schedules. Check 'Kakuyasu Everyday' section."
+    },
+    {
+      "name": "イトーヨーカドー",
+      "name_en": "Ito-Yokado",
+      "chain": "Seven & i Holdings",
+      "discount_schedule": [
+        {
+          "time": "18:00",
+          "discount": "20%",
+          "items": ["deli", "bakery"]
+        },
+        {
+          "time": "19:30",
+          "discount": "30%",
+          "items": ["bento", "deli", "sushi"]
+        },
+        {
+          "time": "21:00",
+          "discount": "50%",
+          "items": ["bento", "deli"]
+        }
+      ],
+      "notes": "Department store-style supermarket. Quality products with aggressive evening discounts."
+    },
+    {
+      "name": "マルエツ",
+      "name_en": "Maruetsu",
+      "chain": "Maruetsu",
+      "discount_schedule": [
+        {
+          "time": "19:00",
+          "discount": "30%",
+          "items": ["deli", "bento"]
+        },
+        {
+          "time": "20:30",
+          "discount": "50%",
+          "items": ["bento", "deli", "sushi"]
+        }
+      ],
+      "notes": "Common in Kanto region. Known for fresh produce."
+    },
+    {
+      "name": "サミット",
+      "name_en": "Summit",
+      "chain": "Summit Store",
+      "discount_schedule": [
+        {
+          "time": "18:30",
+          "discount": "20%",
+          "items": ["deli"]
+        },
+        {
+          "time": "20:00",
+          "discount": "30-50%",
+          "items": ["bento", "deli", "sushi"]
+        }
+      ],
+      "notes": "Popular in Tokyo. Good quality-price balance."
+    },
+    {
+      "name": "オーケー",
+      "name_en": "OK Store",
+      "chain": "OK Corporation",
+      "discount_schedule": [
+        {
+          "time": "20:00",
+          "discount": "30%",
+          "items": ["bento", "deli"]
+        },
+        {
+          "time": "21:30",
+          "discount": "50%",
+          "items": ["bento", "deli"]
+        }
+      ],
+      "notes": "Already has low everyday prices. Late discounts before 22:00 closing."
+    },
+    {
+      "name": "ダイエー",
+      "name_en": "Daiei",
+      "chain": "Aeon Group",
+      "discount_schedule": [
+        {
+          "time": "19:00",
+          "discount": "30%",
+          "items": ["bento", "deli"]
+        },
+        {
+          "time": "20:30",
+          "discount": "50%",
+          "items": ["bento", "deli", "sushi"]
+        }
+      ],
+      "notes": "Similar to AEON schedule. Some 24-hour locations."
     },
     {
       "name": "ライフ",
       "name_en": "Life",
+      "chain": "Life Corporation",
       "discount_schedule": [
         {
           "time": "18:30",
           "discount": "30%",
-          "items": ["惣菜"]
+          "items": ["deli"]
         },
         {
           "time": "20:00",
           "discount": "50%",
-          "items": ["弁当", "惣菜"]
+          "items": ["bento", "deli"]
         }
       ],
-      "notes": "General schedule - specific stores may vary"
+      "notes": "General schedule - specific stores may vary. Check individual store hours."
     },
     {
       "name": "ライフ 幡ヶ谷店",
       "name_en": "Life Hatagaya",
+      "chain": "Life Corporation",
       "brand": "ライフ",
-      "address": "東京都渋谷区幡ヶ谷2-47-12",
+      "address": "2-47-12 Hatagaya, Shibuya-ku, Tokyo",
+      "coordinates": {
+        "lat": 35.6750,
+        "lon": 139.6742
+      },
       "discount_schedule": [
         {
           "time": "18:30",
           "discount": "30%",
-          "items": ["惣菜", "弁当"]
+          "items": ["deli", "bento"]
         },
         {
           "time": "20:00",
           "discount": "50%",
-          "items": ["惣菜", "弁当", "寿司"]
+          "items": ["deli", "bento", "sushi"]
         },
         {
           "time": "21:00",
-          "discount": "半額",
-          "items": ["弁当", "惣菜", "パン"]
+          "discount": "50%",
+          "items": ["bento", "deli", "bakery"]
         }
       ],
       "closing_time": "22:00",
-      "notes": "幡ヶ谷駅から徒歩2分"
+      "notes": "2 minutes walk from Hatagaya Station (Keio Line)"
+    },
+    {
+      "name": "成城石井",
+      "name_en": "Seijo Ishii",
+      "chain": "Seijo Ishii",
+      "discount_schedule": [
+        {
+          "time": "20:00",
+          "discount": "20-30%",
+          "items": ["deli", "bakery"]
+        }
+      ],
+      "notes": "Premium supermarket. Limited discounts. Focus on imported and high-quality products."
+    },
+    {
+      "name": "まいばすけっと",
+      "name_en": "My Basket",
+      "chain": "Aeon Group",
+      "discount_schedule": [
+        {
+          "time": "20:00",
+          "discount": "30%",
+          "items": ["bento", "deli"]
+        },
+        {
+          "time": "21:30",
+          "discount": "50%",
+          "items": ["bento", "deli"]
+        }
+      ],
+      "notes": "Small urban convenience supermarket. Many locations open late."
     }
   ],
+  "item_categories": {
+    "fresh_food": {"ja": "生鮮", "en": "Fresh Food"},
+    "bento": {"ja": "弁当", "en": "Bento (Boxed Meals)"},
+    "deli": {"ja": "惣菜", "en": "Prepared Foods"},
+    "sushi": {"ja": "寿司", "en": "Sushi"},
+    "bakery": {"ja": "パン", "en": "Bakery"}
+  },
   "general_tips": [
-    "打折時間可能因店舗而異",
-    "週末可能提早開始打折",
-    "閉店前 1 小時通常是最大折扣",
-    "人氣商品可能很快賣完"
-  ]
+    {
+      "en": "Discount times vary by store location - check your local branch",
+      "ja": "打折時間可能因店舗而異"
+    },
+    {
+      "en": "Weekends often have earlier discounts due to higher traffic",
+      "ja": "週末可能提早開始打折"
+    },
+    {
+      "en": "Best deals are usually 1 hour before closing time",
+      "ja": "閉店前 1 小時通常是最大折扣"
+    },
+    {
+      "en": "Popular items sell out quickly - arrive early for best selection",
+      "ja": "人氣商品可能很快賣完"
+    },
+    {
+      "en": "Staff start marking down items 30-60 minutes before discount time",
+      "ja": "スタッフは割引時間の30〜60分前にシールを貼り始めます"
+    },
+    {
+      "en": "Rainy days often have less competition for discounted items",
+      "ja": "雨の日は割引商品の競争が少ない"
+    }
+  ],
+  "regions": {
+    "tokyo": ["Life", "Summit", "Maruetsu", "OK Store", "My Basket", "Ito-Yokado"],
+    "kansai": ["Life", "Gyomu Super", "AEON", "Daiei"],
+    "nationwide": ["AEON", "Gyomu Super", "Seiyu", "Ito-Yokado"]
+  }
 }
