@@ -55,7 +55,7 @@ class Trade:
         exit_cost = exit_price * self.shares * (commission_rate + tax_rate)
         self.pnl = gross_pnl - entry_cost - exit_cost
         self.pnl_pct = self.pnl / (self.entry_price * self.shares)
-        self.holding_days = (exit_date - entry_date).days if isinstance(exit_date, datetime) else 0
+        self.holding_days = (exit_date - self.entry_date).days if isinstance(exit_date, datetime) else 0
     
     def to_dict(self):
         return {
