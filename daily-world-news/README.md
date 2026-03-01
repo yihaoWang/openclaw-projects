@@ -8,7 +8,7 @@
 - **Cron ID**：`71c85d19-ff69-409f-b03d-9d7bed7c8268`
 - **模型**：Sonnet (low thinking)
 - **超時**：10 分鐘
-- **推送**：Telegram General 頻道 (`-1003767828002`)
+- **推送**：Telegram 頻道（設定於 cron job 中）
 
 ## 流程
 
