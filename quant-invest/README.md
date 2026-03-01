@@ -46,14 +46,14 @@
 
 ### Cron Jobs
 
-- **週一分析**：`quant-invest-monday`
-- **週五週報**：`quant-invest-friday`
+- **週一分析**：`quant-invest-monday` (ID: `eb29e401-2d35-4330-9cb6-5cd36b910e91`)
+- **週五週報**：`quant-invest-friday` (ID: `b45b7d5b-e9b3-44d0-8206-4b90eafb7b07`)
 
 ### 手動觸發
 
 ```bash
-openclaw cron run <monday-cron-id>
-openclaw cron run <friday-cron-id>
+openclaw cron run eb29e401-2d35-4330-9cb6-5cd36b910e91  # 週一分析
+openclaw cron run b45b7d5b-e9b3-44d0-8206-4b90eafb7b07  # 週五週報
 ```
 
 ## 檔案結構
