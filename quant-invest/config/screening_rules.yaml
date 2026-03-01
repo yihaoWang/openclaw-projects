@@ -1,0 +1,63 @@
+# 台股選股規則 v1.0
+# 這個檔案定義自動選股的篩選條件
+# 每週討論後可調整，調整時同步更新 EVOLUTION.md
+
+market: TW
+select_count: 3-5  # 最終選出的股票數量
+
+# === 基本面篩選 ===
+fundamentals:
+  # 市值：排除太小的公司（流動性風險）
+  min_market_cap_tw_billion: 50  # 最低市值 500 億台幣
+  
+  # 本益比：排除極端值
+  pe_ratio:
+    min: 5      # 太低可能有問題
+    max: 40     # 太高可能高估
+  
+  # 營收成長：近 3 個月營收年增率
+  revenue_yoy_growth:
+    min_months_positive: 2  # 至少 2 個月正成長
+
+# === 技術面篩選 ===
+technicals:
+  # 均線：股價在關鍵均線之上
+  above_ma:
+    - 60   # 季線之上（中期趨勢向上）
+  
+  # RSI：不在極端區域
+  rsi_14:
+    min: 30   # 不要超賣太深（可能在下跌趨勢）
+    max: 75   # 不要超買太嚴重
+  
+  # 成交量：有足夠流動性
+  min_avg_volume_20d: 1000  # 20 日均量至少 1000 張
+
+# === 大盤過濾 ===
+market_filter:
+  # 大盤在 60 日均線以下時，不新增持股
+  index_above_ma60: true
+
+# === 排除條件 ===
+exclude:
+  sectors: []        # 排除的產業（由討論決定）
+  symbols: []        # 排除的個股
+
+# === 進出場規則 ===
+entry:
+  signal: "RSI 從超賣區回升（RSI 14 上穿 35）且在季線之上"
+  
+exit:
+  take_profit: 0.15    # 獲利 15% 出場
+  stop_loss: -0.08     # 虧損 8% 停損
+  rsi_overbought: 75   # RSI > 75 出場
+  trailing_stop: 0.10  # 從高點回落 10% 出場
+
+# === 回測參數 ===
+backtest:
+  period_years: 3
+  commission_rate: 0.001425   # 台股手續費 0.1425%
+  tax_rate: 0.003             # 證交稅 0.3%（賣出）
+  benchmark: "^TWII"          # 台灣加權指數
+  initial_capital: 1000000    # 模擬資金 100 萬
+  position_size: 0.20         # 每檔最多 20% 資金
