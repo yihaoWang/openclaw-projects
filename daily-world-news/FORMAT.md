@@ -38,7 +38,9 @@
   ...（依事件相關國家列出，不預設分組）
 
   💡 觀點差異：[一句話點出各國報導的關鍵分歧]
-  📎 來源：[媒體A](URL) | [媒體B](URL) | [媒體C](URL)
+  📎 來源：（每個網址獨立一行，不用 markdown 超連結）
+  https://example.com/article1
+  https://example.com/article2
 ```
 
 ### 格式 B：標準格式（地區性 / 單一國家新聞）
@@ -47,7 +49,7 @@
 
 ```
 • **[標題/事件名稱]** — [2-3 句深入說明，包含背景脈絡、影響]
-  📎 來源：[媒體名稱](URL)
+  📎 https://example.com/article
 ```
 
 ### 範例：多元視角
@@ -63,7 +65,10 @@
   🇪🇺 歐洲（FT）：擔憂禁令加速全球科技脫鉤，ASML 股價下跌 3%
 
   💡 觀點差異：美方框架為「國安 vs 威脅」，中方框架為「霸權 vs 自主」，日歐則擔憂自身產業被夾在中間
-  📎 來源：[Reuters](URL) | [SCMP](URL) | [Nikkei](URL) | [CNA](URL) | [FT](URL)
+  📎 來源：
+  https://www.reuters.com/example
+  https://www.scmp.com/example
+  https://asia.nikkei.com/example
 ```
 
 ### 範例：標準格式

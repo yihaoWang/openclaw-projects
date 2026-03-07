@@ -75,7 +75,13 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 
 ### Step 1.6 — Send Tech Summary to Telegram
 - Use message tool: action=send, channel=telegram, target=-1003767828002, threadId=36
-- message = tech summary text
+- **⚠️ Telegram 4096 char limit**: If summary > 3800 chars, split into multiple messages:
+  1. Split at section boundaries (## headers) to keep logical grouping
+  2. Each chunk must be ≤ 3800 chars (leave margin for formatting)
+  3. First chunk: include title + top headlines
+  4. Subsequent chunks: continue with remaining sections
+  5. Send each chunk as a separate message call
+  6. Never cut in the middle of a story or source link
 
 ---
 
@@ -96,8 +102,11 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 - Curate 15-20 stories, 3-5 using Format A
 - **Every story MUST have 📎 source links** — zero tolerance
 
-### Step 2.4 — Verify Sources
-- Review all stories. Missing 📎 link → add source or remove story
+### Step 2.4 — Verify Sources (MANDATORY — zero exceptions)
+- Review EVERY story one by one. Missing 📎 link → run web_search to find a source URL and add it
+- Every story MUST end up with at least one real URL — no exceptions
+- **Do NOT proceed to Step 2.5 until every story has at least one real URL**
+- NOTE: If you found the news, you found a source. Track URLs during Step 2.3 gathering, not after the fact.
 
 ### Step 2.5 — Write World Summary
 - Format per [FORMAT.md](FORMAT.md)
@@ -105,7 +114,13 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 
 ### Step 2.6 — Send World Summary to Telegram
 - Use message tool: action=send, channel=telegram, target=-1003767828002, threadId=36
-- message = world summary text
+- **⚠️ Telegram 4096 char limit**: If summary > 3800 chars, split into multiple messages:
+  1. Split at section boundaries (## headers or region headers) to keep logical grouping
+  2. Each chunk must be ≤ 3800 chars (leave margin for formatting)
+  3. First chunk: include title + top 3 headlines
+  4. Subsequent chunks: continue with remaining regions, add "(續)" in first line
+  5. Send each chunk as a separate message call
+  6. Never cut in the middle of a story or source link
 
 ---
 
@@ -158,6 +173,6 @@ cd /home/node/.openclaw/workspace/openclaw-projects && git add -A && git commit 
 - No fabricated news or URLs
 - Compare perspectives by **COUNTRY**, not East/West
 - No duplicates with yesterday
-- Every story needs source links (📎)
+- Every story needs source links (📎) — track URLs during gathering, not after. If you found the news, you have the URL.
 - Tech news scored and ranked by quality_score
 - Telegram messages: 時事 and 科技 sent **separately**, Podcast is **combined**
