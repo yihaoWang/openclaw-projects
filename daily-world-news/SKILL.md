@@ -116,8 +116,9 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 
 ### Step 3.2 — Write Combined Podcast Script
 - **Target: 6000-10000 字** (繁體中文, ~15-25 分鐘語音)
-- **⚠️ HARD MINIMUM: 4000 字** — 低於此字數的稿件不合格，必須重寫擴充
-- **驗證：完成後計算總字數，如 < 4000 字 → 回到 Step 3.2 重寫**
+- **⚠️ HARD MINIMUM: 4000 中文字** — 低於此字數的稿件不合格，必須重寫擴充
+- **驗證方法：** 寫完後執行 `python3 -c "print(len(open('summaries/${TODAY}-podcast.md').read()))"` 確認檔案大小 **≥ 12000 bytes**（中文字約 3 bytes/字，4000字 ≈ 12000 bytes）。如不足 → 回到 Step 3.2 重寫擴充
+- **注意：4000 字 ≠ 4000 bytes！** 中文字每字佔 3 bytes，不要混淆
 - Structure:
   1. **開場** (~1 min) — 打招呼 + 預告今天時事和科技各 2-3 件大事
   2. **時事新聞** (~8-12 min) — 依重要性排序，5-8 個主題段落，融入多國視角
@@ -147,6 +148,8 @@ python3 /home/node/.openclaw/workspace/skills/daily-world-news/scripts/generate-
 ```bash
 cd /home/node/.openclaw/workspace/openclaw-projects && git add -A && git commit -m "📰 每日新聞摘要 ${TODAY}" && git push origin main
 ```
+- **⚠️ MUST verify push succeeded** — run `git log --oneline -1` and confirm the commit hash matches
+- If push fails, retry once. If still fails, report the error.
 
 ---
 
