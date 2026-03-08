@@ -15,7 +15,7 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 ## Key Config
 - All dates/filenames use **JST (Asia/Tokyo)**: `TZ=Asia/Tokyo date +%Y-%m-%d` → `$TODAY`
 - Summaries dir: `/home/node/.openclaw/workspace/openclaw-projects/daily-world-news/summaries/`
-- Skill dir: `/home/node/.openclaw/workspace/skills/daily-world-news/`
+- Skill dir: `/home/node/.openclaw/workspace/openclaw-projects/daily-world-news/`
 
 ---
 
@@ -26,11 +26,14 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 
 ## PHASE 1 — 科技新聞 (Tech Digest)
 
-### Step 1.1 — Read Config
-- Read [TECH_SOURCES.json](TECH_SOURCES.json) for RSS, GitHub, Reddit sources
-- Read [TECH_TOPICS.json](TECH_TOPICS.json) for topic definitions
-- Read [TECH_FORMAT.md](TECH_FORMAT.md) for output format
-- Read [SCORING.md](SCORING.md) for quality scoring rules
+### Step 1.1 — Read Sources Config
+- Read [TECH_SOURCES.json](TECH_SOURCES.json) for RSS, GitHub, Reddit sources and web search queries
+
+**Topics:** 🧠 LLM (max 8) | 🤖 AI Agent (max 6) | 💰 Crypto (max 6) | 🔬 Frontier Tech (max 8)
+
+**Scoring:** Base=5. +3 priority source, +5 multi-source, +2 within 24h, +3 Reddit>500, +1 Reddit>200, +3 GitHub trending. -5 yesterday duplicate. Min threshold=5. Dedup at 85% title similarity.
+
+**Output format:** Top 3 headlines → 4 topic sections (by score desc) → GitHub Releases → Blog Picks → Crypto market snapshot. Each story: `• 🔥{score} **[Title]** — [2-3 sentence summary] 📎 URL`. No markdown tables. Split >3800 chars for Telegram.
 
 ### Step 1.2 — Read Yesterday's Tech Summary
 - Read `summaries/` for yesterday's tech file to avoid duplicates
@@ -63,15 +66,12 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 - 4 topics × 2-3 queries = 8-12 searches
 
 ### Step 1.4 — Score, Deduplicate, Rank
-- Apply scoring formula from [SCORING.md](SCORING.md)
-- Deduplicate: title similarity > 85% → merge, keep most authoritative
+- Apply scoring (see Step 1.1), deduplicate at 85% title similarity
 - Group by topic, sort by quality_score descending
-- Minimum score threshold: 5
 
 ### Step 1.5 — Write Tech Summary
-- Format per [TECH_FORMAT.md](TECH_FORMAT.md)
+- Format per output rules in Step 1.1
 - Save to `summaries/${TODAY}-tech.md`
-- Include: Top 3 headlines, 4 topic sections, GitHub Releases, Blog Picks, Crypto market snapshot
 
 ### Step 1.6 — Send Tech Summary to Telegram
 - Use message tool: action=send, channel=telegram, target=-1003767828002, threadId=36
@@ -146,8 +146,8 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 
 ### Step 3.3 — Generate Audio
 ```bash
-python3 /home/node/.openclaw/workspace/skills/daily-world-news/scripts/generate-audio.py \
-  summaries/${TODAY}-podcast.md summaries/${TODAY}.mp3
+cd /home/node/.openclaw/workspace/openclaw-projects/daily-world-news && \
+python3 scripts/generate-audio.py summaries/${TODAY}-podcast.md summaries/${TODAY}.mp3
 ```
 - Verify mp3 exists after running
 
@@ -157,9 +157,16 @@ python3 /home/node/.openclaw/workspace/skills/daily-world-news/scripts/generate-
 
 ---
 
-## PHASE 4 — Wrap Up
+## PHASE 4 — Validate & Wrap Up
 
-### Step 4.1 — Git Push
+### Step 4.1 — Run Validation
+```bash
+cd /home/node/.openclaw/workspace/openclaw-projects/daily-world-news && python3 scripts/validate.py ${TODAY}
+```
+- If validation **FAILS** (exit code 1): FIX the issues before proceeding. Re-run the failed phase.
+- If validation passes with warnings: proceed but note the warnings in your summary.
+
+### Step 4.2 — Git Push
 ```bash
 cd /home/node/.openclaw/workspace/openclaw-projects && git add -A && git commit -m "📰 每日新聞摘要 ${TODAY}" && git push origin main
 ```
