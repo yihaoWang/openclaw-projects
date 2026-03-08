@@ -150,6 +150,7 @@ cd /home/node/.openclaw/workspace/openclaw-projects/daily-world-news && \
 python3 scripts/generate-audio.py summaries/${TODAY}-podcast.md summaries/${TODAY}.mp3
 ```
 - Verify mp3 exists after running
+- **If TTS fails (503 or other error):** wait 30 seconds, then retry up to 2 more times. Edge TTS 503 is usually transient.
 
 ### Step 3.4 — Send Audio to Telegram
 - Use message tool: action=send, channel=telegram, target=-1003767828002, threadId=36
