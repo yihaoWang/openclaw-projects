@@ -26,54 +26,48 @@ Two-pillar daily news system: **時事新聞** (world affairs) + **科技新聞*
 
 ## PHASE 1 — 科技新聞 (Tech Digest)
 
-### Step 1.1 — Read Sources Config
-- Read [TECH_SOURCES.json](TECH_SOURCES.json) for RSS, GitHub, Reddit sources and web search queries
+### Step 1.1 — Run Data Gatherer Script (DETERMINISTIC)
 
-**Topics:** 🧠 LLM (max 8) | 🤖 AI Agent (max 6) | 💰 Crypto (max 6) | 🔬 Frontier Tech (max 8)
+Run the Python script to collect, score, and deduplicate articles:
 
-**Scoring:** Base=5. +3 priority source, +5 multi-source, +2 within 24h, +3 Reddit>500, +1 Reddit>200, +3 GitHub trending. -5 yesterday duplicate. Min threshold=5. Dedup at 85% title similarity.
+```bash
+cd /home/node/.openclaw/workspace/openclaw-projects/daily-world-news
+YESTERDAY=$(TZ=Asia/Tokyo date -d '1 day ago' +%Y-%m-%d 2>/dev/null || TZ=Asia/Tokyo date -v-1d +%Y-%m-%d)
+python3 gather_tech.py \
+  --sources TECH_SOURCES.json \
+  --yesterday "summaries/${YESTERDAY}-tech.md" \
+  --output "summaries/${TODAY}-raw-tech.json"
+```
 
-**Output format:** Top 3 headlines → 4 topic sections (by score desc) → GitHub Releases → Blog Picks → Crypto market snapshot. Each story: `• 🔥{score} **[Title]** — [2-3 sentence summary] 📎 URL`. No markdown tables. Split >3800 chars for Telegram.
+This script handles ALL data collection deterministically:
+- Fetches ~40 RSS feeds (parallel, 8 workers)
+- Checks ~18 GitHub repos for releases (filters trunk/nightly noise)
+- Fetches ~10 subreddits (score filtered)
+- Applies scoring algorithm (priority +3, multi-source +5, recency +2, Reddit score bonus, yesterday penalty -5)
+- Deduplicates at 85% title similarity
+- Groups by topic, outputs structured JSON
 
-### Step 1.2 — Read Yesterday's Tech Summary
-- Read `summaries/` for yesterday's tech file to avoid duplicates
-- Stories from yesterday get -5 penalty unless major new development
+### Step 1.2 — Web Search Supplement (LLM-DRIVEN)
 
-### Step 1.3 — Gather Tech News (4 source layers)
+The script output (`raw_tech.json`) includes `web_search_queries` for topics underrepresented in RSS/Reddit.
+Run web_search for each query with `freshness: "day"` to find breaking news missed by feeds.
+Focus on topics with fewer articles in the script output.
 
-**Layer A: RSS Feeds (~40 feeds)**
-- For each HIGH-PRIORITY RSS feed in TECH_SOURCES.json, fetch via `web_fetch`
-- Extract articles published in past 48 hours
-- Tag each article with its topics from the source config
-- NOTE: Not all feeds need fetching every day. Prioritize: priority=true feeds first, then sample from others
-- Aim to fetch 15-20 priority feeds + 10 random non-priority feeds
+**Topics:** 🧠 LLM (max 6) | 🤖 AI Agent (max 5) | 💰 Crypto (max 5) | 🔬 Frontier Tech (max 6) | 🚀 Space & Science (max 3) | 📱 Consumer Tech & Hardware (max 3) | 🛡️ Cybersecurity (max 3) | 🧬 Biotech & Health Tech (max 2)
 
-**Layer B: GitHub Releases**
-- For each repo in TECH_SOURCES.json `github_repos`, check via web_fetch:
-  `https://github.com/{owner}/{repo}/releases.atom`
-- Look for releases in past 7 days
-- Tag with topics from config
+**Diversity rule:** The final output MUST cover at least 4 different topic categories. No single topic may exceed 40% of total stories. If a topic is underrepresented, prioritize web_search results for it.
 
-**Layer C: Reddit**
-- For each subreddit in TECH_SOURCES.json `reddit_subs`, fetch:
-  `https://www.reddit.com/r/{sub}/hot.json?limit=10`
-- Filter by min_score threshold from config
-- Only include posts from past 48 hours
+### Step 1.3 — Write Tech Summary (LLM-DRIVEN)
 
-**Layer D: Web Search**
-- Run web_search for each query in TECH_SOURCES.json `web_search_queries`
-- Use freshness filter for past day
-- 4 topics × 2-3 queries = 8-12 searches
+Using the script's structured data + web search results:
+1. **Select** the most newsworthy stories (top scored + editorially significant)
+2. **Summarize** each in 2-3 sentences (this is where LLM judgment matters)
+3. **Write trend analysis** connecting the dots
 
-### Step 1.4 — Score, Deduplicate, Rank
-- Apply scoring (see Step 1.1), deduplicate at 85% title similarity
-- Group by topic, sort by quality_score descending
-
-### Step 1.5 — Write Tech Summary
-- Format per output rules in Step 1.1
+**Output format:** Top 3 headlines → topic sections (by score desc) → GitHub Releases → Blog Picks → Crypto market snapshot. Each story: `• 🔥{score} **[Title]** — [2-3 sentence summary] 📎 URL`. No markdown tables.
 - Save to `summaries/${TODAY}-tech.md`
 
-### Step 1.6 — Send Tech Summary to Telegram
+### Step 1.4 — Send Tech Summary to Telegram
 - Use message tool: action=send, channel=telegram, target=-1003767828002, threadId=36
 - **⚠️ Telegram 4096 char limit**: If summary > 3800 chars, split into multiple messages:
   1. Split at section boundaries (## headers) to keep logical grouping
