@@ -1,111 +1,87 @@
 ---
 name: knowledge-brain
 description: >
-  Daily knowledge consolidation and second-brain management. Use when:
-  (1) Running the daily knowledge consolidation cron job,
-  (2) User asks to organize, review, or search their knowledge base,
-  (3) User says "記下這個" or "remember this insight",
-  (4) Manually triggered knowledge extraction from conversations or content.
-  Manages the knowledge/ directory structure with dated markdown files,
-  INDEX.md cross-references, and LanceDB atomic storage.
+  Knowledge management integrated with Obsidian vault + LanceDB.
+  Use when: (1) User says "記下這個" or "remember this insight",
+  (2) Extracting knowledge from external sources (articles, videos, news),
+  (3) User asks to search or organize the knowledge base.
+  No longer runs as a standalone cron — knowledge capture happens inline
+  during conversations and via Bird agent's news/YT analysis.
 ---
 
 # Knowledge Brain
 
-A personal knowledge management system that consolidates insights from all conversations,
-video summaries, articles, and decisions into a structured, searchable knowledge base.
+知識管理系統，整合 Obsidian vault + LanceDB 雙層儲存。
 
-## Architecture
+## 儲存位置
 
 ```
-knowledge/
-├── INDEX.md          # Master index, sorted by date (newest first)
-├── investing/        # Investment theories, market views, strategies
-├── tech/             # Technical knowledge, tools, architecture
-├── decisions/        # Important decisions with reasoning
-└── misc/             # Everything else worth keeping
+/home/node/obsidian-vault/Knowledge/
+├── INDEX.md          # 主索引（MOC）
+├── investing/        # 投資理論、市場觀點
+├── tech/             # 技術知識、架構、工具
+├── decisions/        # 重要決策與推理過程
+└── misc/             # 其他值得保留的知識
 ```
 
-## Knowledge File Format
+## 知識筆記格式
 
-Each file: `knowledge/<category>/YYYY-MM-DD-<slug>.md`
+檔名：`<category>/YYYY-MM-DD-<slug>.md`
 
 ```markdown
 # <Title>
 
 **日期：** YYYY-MM-DD
-**來源：** <source — video title, conversation, article URL, etc.>
-**標籤：** #tag1 #tag2 #tag3
+**來源：** <來源 — 影片標題、文章 URL、對話主題等>
+**標籤：** #tag1 #tag2
 
 ## 核心觀點
-- Bullet points of key insights
+- Key insights (bullet points)
 
 ## 關鍵數據
-- Numbers, stats, evidence (if any)
+- Numbers, stats, evidence
 
 ## 延伸思考
-- Connections to other knowledge, implications, open questions
+- Connections, implications, open questions
 
 ## 相關條目
-- [[YYYY-MM-DD-other-slug]] (manual cross-references when relevant)
+- [[YYYY-MM-DD-other-slug]]
 ```
 
-## Daily Consolidation Workflow
+## 何時寫入知識庫
 
-Run nightly (JST 23:00 via cron) or manually triggered:
+### ✅ 寫入（外部知識、可複用洞見）
+- 從文章/影片學到的新概念或框架
+- 市場分析、投資理論
+- 技術架構模式、最佳實踐
+- 安全漏洞、攻擊模式
+- 有數據支撐的趨勢觀察
 
-1. Determine today's date: `TZ=Asia/Tokyo date +%Y-%m-%d`
-2. Read `memory/<today>.md` for conversation logs
-3. Read `knowledge/INDEX.md` to understand existing knowledge
-4. Extract valuable insights — skip if nothing worth recording
-5. For each insight:
-   a. Write `knowledge/<category>/<today>-<slug>.md` using the format above
-   b. Store atomic version in LanceDB via `memory_store` (< 500 chars each)
-      - Use category `fact` for knowledge, `decision` for decisions
-      - Include source and date in the stored text for retrieval
-6. Update `knowledge/INDEX.md` — add new entries under the correct section, newest first
+### ❌ 不寫入（放 MEMORY.md 或 Daily note）
+- 個人決策記錄 → Agents/Dan/MEMORY.md
+- 工程操作筆記（「我裝了 X」）→ Daily note
+- 對話摘要 → Daily note
+- 純記事（「明天要做 Y」）→ Daily note
 
-## INDEX.md Format
+## 寫入流程（雙寫）
 
-```markdown
-# Knowledge Index
+1. 寫 Obsidian 筆記 → `/home/node/obsidian-vault/Knowledge/<category>/YYYY-MM-DD-<slug>.md`
+2. 存 LanceDB → `memory_store` (< 500 chars, category: fact, importance ≥ 0.8)
+   - 格式：`[知識:<category> <date>] <one-line summary>。<key detail>。來源：<source>。`
+3. 更新 INDEX.md → 加入新條目，最新在上
 
-## 📈 Investing
-- [2026-03-12 Thiel 壟斷理論](investing/2026-03-12-thiel-monopoly-theory.md) — 零競爭=超額利潤
-- [2026-03-10 ...](investing/2026-03-10-xxx.md) — one-line summary
+## 搜尋知識
 
-## 💻 Tech
-...
+1. `memory_recall("query")` — 語義搜尋 LanceDB
+2. `obsidian-cli search-content "keyword"` — 全文關鍵字
+3. 讀 `INDEX.md` — 按主題瀏覽
 
-## 🎯 Decisions
-...
+## Bird Agent 整合
 
-## 📝 Misc
-...
-```
+Bird 在推送新聞/YT 分析時，如果內容包含**可複用的知識洞見**，
+應同時寫入 Knowledge vault。例如：
 
-## Quality Rules
+- YT 影片分析發現新的投資框架 → `Knowledge/investing/`
+- 新聞中的技術趨勢 → `Knowledge/tech/`
 
-- **Don't force it** — if nothing is worth recording, produce nothing
-- **Atomic LanceDB entries** — each insight stored separately, < 500 chars, with keywords
-- **Dated filenames** — always prefix with YYYY-MM-DD for browsability
-- **One insight per file** — unless tightly related points from same source
-- **Cross-reference** — note connections to existing knowledge when obvious
-- **Slug in English** — for filesystem compatibility; content can be in any language
-
-## Manual Capture
-
-When user says "記下這個" or similar during conversation:
-1. Extract the insight from current context
-2. Write to appropriate `knowledge/<category>/<today>-<slug>.md`
-3. Update INDEX.md
-4. Store in LanceDB
-5. Confirm to user what was captured
-
-## Searching Knowledge
-
-When user asks about past knowledge:
-1. First try `memory_recall` with relevant keywords
-2. If needed, grep through `knowledge/` files
-3. Check INDEX.md for topic browsing
-4. Synthesize findings from multiple entries when relevant
+這樣 Knowledge 的來源就不只是對話，還包含每日自動蒐集的外部資訊。
