@@ -90,6 +90,11 @@ def fetch_via_ytdlp(channel_id: str, handle: str = "") -> list[dict]:
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--frequency", "-f", help="Filter by frequency (hourly/daily)")
+    args = parser.parse_args()
+
     if not STATE_FILE.exists():
         print(json.dumps({"error": "state file not found"}))
         sys.exit(1)
@@ -103,6 +108,8 @@ def main():
         channels = {}
         for ch in channel_list:
             if not ch.get("enabled", True):
+                continue
+            if args.frequency and ch.get("frequency", "daily") != args.frequency:
                 continue
             cid = ch["channelId"]
             # Merge with state data (preserves lastSeenVideoIds etc.)
