@@ -47,7 +47,24 @@ This script handles ALL data collection deterministically:
 - Deduplicates at 85% title similarity
 - Groups by topic, outputs structured JSON
 
-### Step 1.2 — Web Search Supplement (LLM-DRIVEN)
+### Step 1.2 — X (Twitter) Search Supplement (DETERMINISTIC)
+
+Run the X search script to gather trending tech discussions from X:
+
+```bash
+cd /home/node/.openclaw/workspace/openclaw-projects/x-monitor
+python3 x-search.py "AI OR LLM OR GPT min_faves:100 lang:en" --count 10 --mode top -o /tmp/x-tech-ai.json
+python3 x-search.py "crypto OR bitcoin OR ethereum min_faves:100 lang:en" --count 5 --mode top -o /tmp/x-tech-crypto.json
+python3 x-search.py "AI OR 人工智能 OR LLM min_faves:50 lang:zh" --count 5 --mode top -o /tmp/x-tech-zh.json
+```
+
+Review the X results for:
+- Breaking news not yet covered by RSS/Reddit
+- Expert opinions and insider perspectives
+- Trending topics and viral discussions
+- Add noteworthy X posts as supplementary sources (credit with 📎 x.com link)
+
+### Step 1.3 — Web Search Supplement (LLM-DRIVEN)
 
 The script output (`raw_tech.json`) includes `web_search_queries` for topics underrepresented in RSS/Reddit.
 Run web_search for each query with `freshness: "day"` to find breaking news missed by feeds.
@@ -57,9 +74,9 @@ Focus on topics with fewer articles in the script output.
 
 **Diversity rule:** The final output MUST cover at least 4 different topic categories. No single topic may exceed 40% of total stories. If a topic is underrepresented, prioritize web_search results for it.
 
-### Step 1.3 — Write Tech Summary (LLM-DRIVEN)
+### Step 1.4 — Write Tech Summary (LLM-DRIVEN)
 
-Using the script's structured data + web search results:
+Using the script's structured data + web search + X search results:
 1. **Select** the most newsworthy stories (top scored + editorially significant)
 2. **Summarize** each in 2-3 sentences (this is where LLM judgment matters)
 3. **Write trend analysis** connecting the dots
@@ -67,7 +84,7 @@ Using the script's structured data + web search results:
 **Output format:** Top 3 headlines → topic sections (by score desc) → GitHub Releases → Blog Picks → Crypto market snapshot. Each story: `• 🔥{score} **[Title]** — [2-3 sentence summary] 📎 URL`. No markdown tables.
 - Save to `summaries/${TODAY}-tech.md`
 
-### Step 1.4 — Send Tech Summary to Telegram
+### Step 1.5 — Send Tech Summary to Telegram
 - Use message tool: action=send, channel=telegram, target=-1003767828002, threadId=36
 - **⚠️ Telegram 4096 char limit**: If summary > 3800 chars, split into multiple messages:
   1. Split at section boundaries (## headers) to keep logical grouping
@@ -90,6 +107,8 @@ Using the script's structured data + web search results:
 - Only carry forward stories with significant new developments
 
 ### Step 2.3 — Gather World News
+- Run X search for breaking world news: `python3 /home/node/.openclaw/workspace/openclaw-projects/x-monitor/x-search.py "breaking news min_faves:500 lang:en" --count 10 --mode top -o /tmp/x-world-news.json`
+- Review X results for breaking stories that may not yet appear in web search
 - Run 15-25 web_search queries across all 9 regions
 - For major international events → Format A (multi-country perspectives from different media)
 - For regional news → Format B (standard)
